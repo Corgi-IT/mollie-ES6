@@ -1,0 +1,46 @@
+{
+    "name": "mollie-es6",
+    "version": "0.1.0",
+    "description": "Mollie module ready for ES6 usage",
+    "main": "app.js",
+    "scripts": {
+        "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/ --recursive --compilers js:babel/register",
+        "dev": "nodemon --harmony --use-strict server.js",
+        "lint": "$(npm bin)/eslint .",
+        "eslint-pre-commit": "./scripts/eslint-pre-commit"
+    },
+    "pre-commit": [
+        "eslint-pre-commit",
+        "lint",
+        "test"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Geexteam/mollie-ES6.git"
+    },
+    "keywords": [
+        "mollie",
+        "mollie-es6"
+    ],
+    "author": "Renzo Roso <renzo@geex.company>",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/Geexteam/mollie-ES6/issues"
+    },
+    "homepage": "https://github.com/Geexteam/mollie-ES6#readme",
+    "dependencies": {
+        "lodash": "^3.10.1",
+        "superagent": "^1.8.3"
+    },
+    "devDependencies": {
+        "babel": "^5.8.29",
+        "eslint": "^1.10.3",
+        "eslint-config-defaults": "^7.1.1",
+        "eslint-plugin-filenames": "^0.2.0",
+        "istanbul": "^0.4.1",
+        "mocha": "^2.3.4",
+        "pre-commit": "^1.1.2",
+        "should": "^7.1.1",
+        "sinon": "^1.17.3"
+    }
+}

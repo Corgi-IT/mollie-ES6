@@ -1,0 +1,43 @@
+{
+    "ecmaFeatures": {},
+    "env": {
+        "browser": true,
+        "node": true,
+        "amd": true
+    },
+    "extends": "defaults/configurations/walmart/es6-node",
+    "rules": {
+        "indent": [
+            2,
+            4,
+            {
+                "VariableDeclarator": 2
+            }
+        ],
+        "quotes": [
+            2,
+            "single",
+            "avoid-escape"
+        ],
+        "camelcase": 0,
+        "func-style": [
+            2,
+            "declaration"
+        ],
+        "filenames/filenames": [
+            2,
+            "^[a-z_]+$"
+        ],
+        "global-require": 0,
+        "max-statements": [
+            2,
+            20
+        ],
+        "max-len": [
+            2,
+            120,
+            4
+        ],
+        "no-use-before-define": 0,
+    }
+}
