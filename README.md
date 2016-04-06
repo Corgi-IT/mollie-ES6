@@ -25,6 +25,9 @@ Set the basics needed
     mollie.api_key = 'test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM';
 ```
 
+All callback functions now return promises,
+which you can either `yield` in a `try / catch` or resolve it`foo.then().catch()`
+
 Create a new payment.
 ```ES6
     try {

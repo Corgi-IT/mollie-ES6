@@ -39,5 +39,8 @@
             4
         ],
         "no-use-before-define": 0,
+        "max-params": 0,
+        "no-throw-literal": 0,
+        "indent": 0
     }
 }
