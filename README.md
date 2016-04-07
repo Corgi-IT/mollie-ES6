@@ -66,7 +66,7 @@ Retrieving a payment.
 |:-------------:|:-------------:|
 | Create        | Yes           |
 | Get           | Yes           |
-| List          | No            |
+| List          | Yes           |
 
 ### Methods ###
 

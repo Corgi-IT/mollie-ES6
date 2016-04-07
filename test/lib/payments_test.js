@@ -18,7 +18,6 @@ describe('Payments', function () {
         const redirectUrl = 'http://example.org/order/12345';
 
         describe('Basics', function () {
-
             it('Should be a function', function () {
                 payments.create.should.be.a.Function();
             });
@@ -138,6 +137,12 @@ describe('Payments', function () {
 
     describe('.get', function () {
 
+        describe('Basics', function () {
+            it('Should be a function', function () {
+                payments.get.should.be.a.Function();
+            });
+        });
+
         describe('Errors', function () {
             it('An Object should be thrown', co.wrap(function *() {
                 try {
@@ -242,4 +247,75 @@ describe('Payments', function () {
             }));
         });
     });
+
+
+    describe('.list', function () {
+        const offset = 2;
+        const count = 'Mollie ES6 module Test';
+
+        describe('Basics', function () {
+            it('Should be a function', function () {
+                payments.list.should.be.a.Function();
+            });
+        });
+
+        describe('Errors', function () {
+            it('Should throw an error if a count of more than 250 is given', co.wrap(function*() {
+                try {
+                    yield payments.list({count: 251});
+                    check = 1;
+                } catch (error) {
+                    error.should.have.property('error', 'Count larger than 250 is not allowed');
+                    check = 2;
+                }
+                check.should.equal(2);
+            }));
+        });
+
+        describe('Success', function () {
+            it('Should return an Object', co.wrap(function *() {
+                try {
+                    const payment = yield mollie.payments.list({count: 15});
+                    payment.should.be.an.Object();
+                    check = 1;
+                } catch (error) {
+                    console.log(error);
+                    check = 2;
+                }
+                check.should.equal(1);
+            }));
+
+            it('Should return certain fields', co.wrap(function *() {
+                try {
+                    const payment = yield mollie.payments.list({count: 15});
+                    payment.should.have.property('totalCount')
+                    payment.should.have.property('offset')
+                    payment.should.have.property('count')
+                    payment.should.have.property('data')
+                    check = 1;
+                } catch (error) {
+                    console.log(error);
+                    check = 2;
+                }
+                check.should.equal(1);
+            }));
+
+            it('Should return payments with payment functions', co.wrap(function *() {
+                try {
+                    const payments = yield mollie.payments.list({count: 15});
+                    const payment = payments.data[0];
+
+                    payment.should.have.property('getPaymentUrl');
+                    payment.should.have.property('isPaid');
+
+                    check = 1;
+                } catch (error) {
+                    console.log(error);
+                    check = 2;
+                }
+                check.should.equal(1);
+            }));
+        });
+    });
+
 });
