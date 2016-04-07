@@ -1,4 +1,8 @@
 # Mollie ES6 API client for Node.js #
+Mollie API made ready for ES6 usage.
+
+*You can see a list of implemented functions at the bottom.*
+*Till Version 1.0.0, this is WIP*
 
 ## Requirements ##
 To use the Mollie API client, the following things are required:
@@ -54,5 +58,37 @@ Retrieving a payment.
     }
 ```
 
+## Implemented Functions ##
+
+### Payments ###
+
+| Functionality |Implemented    |
+|:-------------:|:-------------:|
+| Create        | Yes           |
+| Get           | No            |
+| List          | No            |
+
+### Methods ###
+
+| Functionality |Implemented    |
+|:-------------:|:-------------:|
+| List          | No            |
+| Get           | No            |
+
+### Issuer ###
+
+| Functionality |Implemented    |
+|:-------------:|:-------------:|
+| List          | No            |
+| Get           | No            |
+
+### Refunds ###
+
+| Functionality |Implemented    |
+|:-------------:|:-------------:|
+| Create        | No            |
+| Get           | No            |
+| List          | No            |
+| Cancel        | No            |
 
 
