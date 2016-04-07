@@ -1,6 +1,8 @@
 "use strict";
 import should from 'should';
 import mollie from '../app';
+import co from 'co';
+import request from '../lib/request';
 
 describe('Mollie Test', function () {
 
@@ -25,5 +27,19 @@ describe('Mollie Test', function () {
             mollie.should.have.property('payments');
             mollie.payments.should.be.an.Object();
         });
+
+        it('Should throw an error if no API key is set', co.wrap(function *() {
+            let check = 0;
+
+            try {
+                yield request();
+                check = 1;
+            } catch (error) {
+                error.should.have.property('error', 'There is no API key I can use, please set your key `mollie.api_key`');
+                check = 2;
+            }
+            
+            check.should.equal(2);
+        }));
     });
 });
