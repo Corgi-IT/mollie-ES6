@@ -14,7 +14,6 @@ describe('Methods', function () {
 
     describe('.list', function () {
         const offset = 0;
-        const count = 'Mollie ES6 module Test';
 
         describe('Basics', function () {
             it('Should be a function', function () {
@@ -65,7 +64,7 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return methods with payment functions', co.wrap(function *() {
+            it('Should return methods with method functions', co.wrap(function *() {
                 try {
                     const methods = yield mollie.methods.list({count: 15});
                     const method = methods.data[0];
