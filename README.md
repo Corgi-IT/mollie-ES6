@@ -72,8 +72,8 @@ Retrieving a payment.
 
 | Functionality |Implemented    |
 |:-------------:|:-------------:|
-| List          | No            |
-| Get           | No            |
+| List          | Yes           |
+| Get           | Yes           |
 
 ### Issuer ###
 
