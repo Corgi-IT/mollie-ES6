@@ -165,6 +165,51 @@ Retrieving a payment.
         // Handle error
     }
 ```
+### Issuers ###
+
+This part is iDEAL only.
+Using issuers makes it possible to integrate the bank choice in your own system.
+
+#### List ####
+
+```ES6
+    const options = {
+        count: 20,
+        offset: 2
+    }
+    try {
+        const issuers_list = yield mollie.issuers.list(options);
+        /*
+        issuers_list = {
+            totalCount: Number,
+            offset:     Number,
+            count:      Number,
+            data:       [Issuers],
+            links: {
+                first:      String(url),
+                previous:   String(url),
+                next:       String(url),
+                last:       String(url)
+            }
+        }
+        */
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Get ####
+
+```ES6
+    const issuer_id = 'ideal_ABNANL2A';
+
+    try {
+        const issuer = yield mollie.issuers.get(issuer_id);
+        // Do something with this issuer
+    } catch (e) {
+        // Handle error
+    }
+```
 
 ### Issuer ###
 
