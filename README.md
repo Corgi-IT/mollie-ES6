@@ -211,13 +211,6 @@ Using issuers makes it possible to integrate the bank choice in your own system.
     }
 ```
 
-### Issuer ###
-
-| Functionality |Implemented    |
-|:-------------:|:-------------:|
-| List          | Yes           |
-| Get           | Yes           |
-
 ### Refunds ###
 
 | Functionality |Implemented    |
