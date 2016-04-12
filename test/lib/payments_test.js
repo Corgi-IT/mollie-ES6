@@ -288,10 +288,10 @@ describe('Payments', function () {
             it('Should return certain fields', co.wrap(function *() {
                 try {
                     const payment = yield mollie.payments.list({count: 15});
-                    payment.should.have.property('totalCount')
-                    payment.should.have.property('offset')
-                    payment.should.have.property('count')
-                    payment.should.have.property('data')
+                    payment.should.have.property('totalCount');
+                    payment.should.have.property('offset');
+                    payment.should.have.property('count');
+                    payment.should.have.property('data');
                     check = 1;
                 } catch (error) {
                     console.log(error);
@@ -307,6 +307,23 @@ describe('Payments', function () {
 
                     payment.should.have.property('getPaymentUrl');
                     payment.should.have.property('isPaid');
+
+                    check = 1;
+                } catch (error) {
+                    console.log(error);
+                    check = 2;
+                }
+                check.should.equal(1);
+            }));
+
+            it('Should work without parameters', co.wrap(function *() {
+                try {
+                    const payment = yield mollie.payments.list();
+
+                    payment.should.have.property('totalCount');
+                    payment.should.have.property('offset');
+                    payment.should.have.property('count');
+                    payment.should.have.property('data');
 
                     check = 1;
                 } catch (error) {
