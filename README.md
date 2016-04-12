@@ -86,9 +86,9 @@ Retrieving a payment.
 
 | Functionality |Implemented    |
 |:-------------:|:-------------:|
-| Create        | No            |
-| Get           | No            |
-| List          | No            |
-| Cancel        | No            |
+| Create        | Yes           |
+| Get           | Yes           |
+| List          | Yes           |
+| Cancel        | Yes           |
 
 
