@@ -1,0 +1,9 @@
+node_modules/
+coverage/
+.idea
+test/
+scripts/
+.eslintignore
+.eslintrc
+.editorconfig
+.gitignore
