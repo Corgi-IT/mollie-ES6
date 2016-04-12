@@ -122,10 +122,49 @@ Retrieving a payment.
 
 ### Methods ###
 
-| Functionality |Implemented    |
-|:-------------:|:-------------:|
-| List          | Yes           |
-| Get           | Yes           |
+#### List ####
+
+```ES6
+    const options = {
+        count: 10,
+        offset: 5
+    }
+    try {
+        const methods_list = yield mollie.methods.list(options);
+        /*
+        methods_list = {
+            totalCount: Number,
+            offset:     Number,
+            count:      Number,
+            data:       [Methods],
+            links: {
+                first:      String(url),
+                previous:   String(url),
+                next:       String(url),
+                last:       String(url)
+            }
+        }
+        */
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Get ####
+
+```ES6
+    const amount = 100.00;
+    const method_id = 'creditcard';
+
+    try {
+        const method = yield mollie.methods.get(method_id);
+        if(method.getMinAmount() < amount && method.getMaxAmount > amount) {
+            // Allow user to check out
+        }
+    } catch (e) {
+        // Handle error
+    }
+```
 
 ### Issuer ###
 
