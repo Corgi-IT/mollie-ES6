@@ -1,9 +1,6 @@
 # Mollie ES6 API client for Node.js #
 Mollie API made ready for ES6 usage.
 
-*You can see a list of implemented functions at the bottom.*
-*Till Version 1.0.0, this is WIP*
-
 ## Requirements ##
 To use the Mollie API client, the following things are required:
 
@@ -48,8 +45,9 @@ Create a new payment.
 
 Retrieving a payment.
 ```ES6
+    const payment_id = 'some_id';
     try {
-        const payment = yield mollie.payments.get(payment.id);
+        const payment = yield mollie.payments.get(payment_id);
         if(payment.isPaid()) {
             console.log('Payment is paid');
         }
@@ -62,11 +60,65 @@ Retrieving a payment.
 
 ### Payments ###
 
-| Functionality |Implemented    |
-|:-------------:|:-------------:|
-| Create        | Yes           |
-| Get           | Yes           |
-| List          | Yes           |
+#### Create ####
+
+```ES6
+    try {
+        const payment = yield mollie.payments.create({
+            amount:      10.00,
+            description: "My first API payment",
+            redirectUrl: "https://webshop.com/api/payments/response"
+        });
+        res.redirect(payment.getPaymentUrl());
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Get ####
+
+```ES6
+    const payment_id = 'some_id';
+    const options = {
+        method: 'creditcard'
+    };
+    try {
+        const payment = yield mollie.payments.get(payment_id, options);
+        if(payment.isPaid()) {
+            console.log('Payment is paid');
+        }
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### List ####
+
+```ES6
+    const options = {
+        count: 100,
+        offset: 200
+    }
+    try {
+        const payments_list = yield mollie.payments.list(options);
+        /*
+        payments_list = {
+            totalCount: Number,
+            offset:     Number,
+            count:      Number,
+            data:       [Payments],
+            links: {
+                first:      String(url),
+                previous:   String(url),
+                next:       String(url),
+                last:       String(url)
+            }
+        }
+        */
+    } catch (e) {
+        // Handle error
+    }
+```
 
 ### Methods ###
 
