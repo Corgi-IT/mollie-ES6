@@ -213,11 +213,59 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 
 ### Refunds ###
 
-| Functionality |Implemented    |
-|:-------------:|:-------------:|
-| Create        | Yes           |
-| Get           | Yes           |
-| List          | Yes           |
-| Cancel        | Yes           |
+#### Create ####
+
+```ES6
+    try {
+        const refund_id = 'some_id';
+        const amount = 5.00; // This is optional, if omitted,
+                             // the full amount will be refunded
+        const refund = yield mollie.refunds.create(refund_id, amount);
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Get ####
+
+```ES6
+    const payment_id = 'payment_id';
+    const refund_id = 'refund_id'
+    try {
+        const refund = yield mollie.refunds.get(payment_id, refund_id);
+        if(refund.payment.isFullyRefunded()) {
+            console.log('Payment is fully refunded');
+        }
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### List ####
+
+```ES6
+    const payment_id = 'payment_id';
+    const options = {
+        count: 10,
+        offset: 2
+    }
+    try {
+        const payments_list = yield mollie.refunds.list(payment_id, options);
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Cancel ####
+
+```ES6
+    const payment_id = 'payment_id';
+    const refund_id = 'refund_id'
+    try {
+        const refund = yield mollie.refunds.cancel(payment_id, refund_id);
+    } catch (e) {
+        // Handle error
+    }
+```
 
 
