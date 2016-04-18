@@ -1,8 +1,9 @@
-# Mollie ES6 API client for Node.js #
-Mollie API made ready for ES6 usage.
+![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+# Mollie API client in ES6 #
+Mollie API client written in ES6 by an official Mollie Partner / Reseller.
 
 ## Requirements ##
-To use the Mollie API client, the following things are required:
+To use the this module, the following is required:
 
 + Node.js v4.4.2 or higher
 + You can [Sign up](https://www.mollie.com/en/signup/2269941) here for free.
