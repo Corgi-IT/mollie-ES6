@@ -1,61 +1,61 @@
 {
-    "name": "mollie-es6",
-    "version": "1.1.2",
-    "description": "Mollie module in ES6",
-    "main": "app.js",
-    "scripts": {
-        "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/ --recursive",
-        "lint": "$(npm bin)/eslint .",
-        "eslint-pre-commit": "./scripts/eslint-pre-commit",
-        "auto-test": "nodemon --ignore coverage/ -x \"npm test && npm run lint\""
-    },
-    "pre-commit": [
-        "eslint-pre-commit",
-        "lint",
-        "test"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Geexteam/mollie-ES6.git"
-    },
-    "keywords": [
-        "mollie",
-        "mollie-es6",
-        "payments-es6",
-        "payments",
-        "creditcard",
-        "ideal",
-        "payments",
-        "payment",
-        "sepa",
-        "bitcoin",
-        "paypal",
-        "payment provider",
-        "mollie api",
-        "incasse",
-        "banktransfer",
-        "banking",
-        "paysafecard"
-    ],
-    "author": "Renzo Roso <renzo@geex.company>",
-    "license": "GPL-3.0",
-    "bugs": {
-        "url": "https://github.com/Geexteam/mollie-ES6/issues"
-    },
-    "homepage": "https://github.com/Geexteam/mollie-ES6#readme",
-    "dependencies": {
-        "lodash": "^3.10.1",
-        "superagent": "^1.8.3"
-    },
-    "devDependencies": {
-        "co": "^4.6.0",
-        "eslint": "^1.10.3",
-        "eslint-config-defaults": "^7.1.1",
-        "eslint-plugin-filenames": "^0.2.0",
-        "istanbul": "^0.4.1",
-        "mocha": "^2.3.4",
-        "pre-commit": "^1.1.2",
-        "should": "^7.1.1",
-        "sinon": "^1.17.3"
-    }
+  "name": "mollie-es6",
+  "version": "2.0.0",
+  "description": "Mollie module in ES6",
+  "main": "app.js",
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/ --recursive",
+    "lint": "$(npm bin)/eslint .",
+    "eslint-pre-commit": "./scripts/eslint-pre-commit",
+    "auto-test": "nodemon --ignore coverage/ -x \"npm test && npm run lint\""
+  },
+  "pre-commit": [
+    "eslint-pre-commit",
+    "lint",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geexteam/mollie-ES6.git"
+  },
+  "keywords": [
+    "mollie",
+    "mollie-es6",
+    "payments-es6",
+    "payments",
+    "creditcard",
+    "ideal",
+    "payments",
+    "payment",
+    "sepa",
+    "bitcoin",
+    "paypal",
+    "payment provider",
+    "mollie api",
+    "incasse",
+    "banktransfer",
+    "banking",
+    "paysafecard"
+  ],
+  "author": "Renzo Roso <renzo@geex.company>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Geexteam/mollie-ES6/issues"
+  },
+  "homepage": "https://github.com/Geexteam/mollie-ES6#readme",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "superagent": "^1.8.3"
+  },
+  "devDependencies": {
+    "co": "^4.6.0",
+    "eslint": "^1.10.3",
+    "eslint-config-defaults": "^7.1.1",
+    "eslint-plugin-filenames": "^0.2.0",
+    "istanbul": "^0.4.1",
+    "mocha": "^2.3.4",
+    "pre-commit": "^1.1.2",
+    "should": "^7.1.1",
+    "sinon": "^1.17.3"
+  }
 }
