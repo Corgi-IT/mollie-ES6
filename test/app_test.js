@@ -1,8 +1,8 @@
 "use strict";
-import should from 'should';
-import mollie from '../app';
-import co from 'co';
-import request from '../lib/request';
+require('should');
+const co = require('co');
+const mollie = require('../app');
+const request = require('../lib/request');
 
 describe('Mollie Test', function () {
 
@@ -38,7 +38,7 @@ describe('Mollie Test', function () {
                 error.should.have.property('error', 'There is no API key I can use, please set your key `mollie.api_key`');
                 check = 2;
             }
-            
+
             check.should.equal(2);
         }));
     });

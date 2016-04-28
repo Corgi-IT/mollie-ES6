@@ -1,7 +1,7 @@
 "use strict";
-import should from 'should';
-import co from 'co';
-import mollie from '../../app';
+require('should');
+const co = require('co');
+const mollie = require('../../app');
 
 describe('Payments', function () {
     const payments = mollie.payments;

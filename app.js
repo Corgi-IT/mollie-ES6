@@ -1,14 +1,7 @@
-import payments from './lib/payments';
-import methods from './lib/methods';
-import issuers from './lib/issuers';
-import refunds from './lib/refunds';
-
-const mollie = {
-    payments,
-    methods,
-    issuers,
-    refunds,
+module.exports = {
+    payments: require('./lib/payments'),
+    methods: require('./lib/methods'),
+    issuers: require('./lib/issuers'),
+    refunds: require('./lib/refunds'),
     api_key: null
 };
-
-export default mollie;

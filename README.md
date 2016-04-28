@@ -5,21 +5,21 @@ Mollie API client written in ES6 by an official Mollie Partner / Reseller.
 ## Requirements ##
 To use the this module, the following is required:
 
-+ Node.js v4.4.2 or higher
++ Node.js v6.0.0 or higher
 + You can [Sign up](https://www.mollie.com/en/signup/2269941) here for free.
 
 ## Installation ##
 
 You can install this module with NPM:
 
-    npm install mollie-es6
+    npm install --save mollie-es6
 
 ## Getting started ##
 *Examples are in Express.js*
 
-Import the library.
+Require the library.
 ```ES6
-    import mollie from 'mollie-es6';
+    const mollie = require('mollie-es6');
 ```
 
 Set the basics needed
