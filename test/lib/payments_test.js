@@ -69,6 +69,40 @@ describe('Payments', function () {
                 }
                 check.should.equal(2);
             }));
+
+            it('Should throw an error if recurringType is set, but no customerID', co.wrap(function *() {
+                try {
+                    const payment = yield mollie.payments.create(
+                        amount,
+                        description,
+                        redirectUrl,
+                        {recurringType: 'first'}
+                    );
+                    payment.should.be.an.Object();
+                    check = 1;
+                } catch (error) {
+                    error.should.have.property('error');
+                    check = 2;
+                }
+                check.should.equal(2);
+            }));
+
+            it('Should throw an error if recurringType is not "first" or "recurring"', co.wrap(function *() {
+                try {
+                    const payment = yield mollie.payments.create(
+                        amount,
+                        description,
+                        redirectUrl,
+                        {recurringType: 'amazing!!'}
+                    );
+                    payment.should.be.an.Object();
+                    check = 1;
+                } catch (error) {
+                    error.should.have.property('error');
+                    check = 2;
+                }
+                check.should.equal(2);
+            }));
         });
 
         describe('Success', function () {

@@ -4,7 +4,7 @@
   "description": "Mollie module in ES6",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/ --recursive",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/ --recursive --timeout 5000",
     "lint": "$(npm bin)/eslint .",
     "eslint-pre-commit": "./scripts/eslint-pre-commit",
     "auto-test": "nodemon --ignore coverage/ -x \"npm test && npm run lint\""
@@ -44,6 +44,7 @@
   },
   "homepage": "https://github.com/Geexteam/mollie-ES6#readme",
   "dependencies": {
+    "accepted": "^1.1.0",
     "lodash": "^3.10.1",
     "superagent": "^1.8.3"
   },
