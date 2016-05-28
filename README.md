@@ -63,6 +63,7 @@ Retrieving a payment.
 
 #### Create ####
 
+##### Normal #####
 ```ES6
     try {
         const payment = yield mollie.payments.create({
@@ -70,6 +71,24 @@ Retrieving a payment.
             description: "My first API payment",
             redirectUrl: "https://webshop.com/api/payments/response"
         });
+        res.redirect(payment.getPaymentUrl());
+    } catch (e) {
+        // Handle error
+    }
+```
+
+##### Recurring #####
+```ES6
+    try {
+        const payment = yield mollie.payments.create(
+            amount,
+            description,
+            redirectUrl,
+            {
+                recurringType: 'first' || 'recurring',
+                customerId: 'John Cena'
+            }
+        );
         res.redirect(payment.getPaymentUrl());
     } catch (e) {
         // Handle error

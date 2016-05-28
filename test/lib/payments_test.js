@@ -93,7 +93,10 @@ describe('Payments', function () {
                         amount,
                         description,
                         redirectUrl,
-                        {recurringType: 'amazing!!'}
+                        {
+                            recurringType: 'amazing!!',
+                            customerId: 'John Cena'
+                        }
                     );
                     payment.should.be.an.Object();
                     check = 1;
