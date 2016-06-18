@@ -44,8 +44,8 @@
   },
   "homepage": "https://github.com/Geexteam/mollie-ES6#readme",
   "dependencies": {
-    "accepted": "^1.1.0",
     "lodash": "^3.10.1",
+    "obj-denied": "^1.1.1",
     "superagent": "^1.8.3"
   },
   "devDependencies": {
