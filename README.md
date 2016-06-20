@@ -288,4 +288,61 @@ Using issuers makes it possible to integrate the bank choice in your own system.
     }
 ```
 
+### Customers ###
+
+#### Create ####
+
+##### Normal #####
+```ES6
+    try {
+        const customer = yield mollie.customers.create(
+            'Customer name',
+            'info@domain.tld',
+            {locale: 'en', metadata: {something: 'here'}}
+        );
+        // New customer created, do something fun with it
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### Get ####
+
+```ES6
+    const customer_id = 'some_id';
+    try {
+        const customer = yield mollie.customers.get(customer_id);
+        // Do something with this customer data
+    } catch (e) {
+        // Handle error
+    }
+```
+
+#### List ####
+
+```ES6
+    const options = {
+        count: 100,
+        offset: 200
+    }
+    try {
+        const customer_list = yield mollie.customers.list(options);
+        /*
+        customer_list = {
+            totalCount: Number,
+            offset:     Number,
+            count:      Number,
+            data:       [Customers],
+            links: {
+                first:      String(url),
+                previous:   String(url),
+                next:       String(url),
+                last:       String(url)
+            }
+        }
+        */
+    } catch (e) {
+        // Handle error
+    }
+```
 
