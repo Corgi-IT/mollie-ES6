@@ -7,6 +7,7 @@ To use the this module, the following is required:
 
 + Node.js v6.0.0 or higher
 + You can [Sign up](https://www.mollie.com/en/signup/2269941) here for free.
++ If you need any help with setting it up, just contact us [@GeeX_dev](https://twitter.com/GeeX_dev) on twitter
 
 ## Installation ##
 
@@ -32,12 +33,15 @@ which you can either `yield` in a `try / catch` or resolve it`foo.then().catch()
 
 Create a new payment.
 ```ES6
+    const amount = 10.00;
+    const description = 'My first API payment';
+    const redirectUrl = 'http://example.org/order/12345';
     try {
-        const payment = yield mollie.payments.create({
-            amount:      10.00,
-            description: "My first API payment",
-            redirectUrl: "https://webshop.com/api/payments/response"
-        });
+        const payment = yield mollie.payments.create(
+            amount,
+            description,
+            redirectUrl
+        );
         res.redirect(payment.getPaymentUrl());
     } catch (e) {
         // Handle error
@@ -46,11 +50,11 @@ Create a new payment.
 
 Retrieving a payment.
 ```ES6
-    const payment_id = 'some_id';
+    const payment_id = 'payment_id';
     try {
         const payment = yield mollie.payments.get(payment_id);
         if(payment.isPaid()) {
-            console.log('Payment is paid');
+            console.log('Payment is fulfilled');
         }
     } catch (e) {
         // Handle error
@@ -65,12 +69,15 @@ Retrieving a payment.
 
 ##### Normal #####
 ```ES6
+    const amount = 10.00;
+    const description = 'My first API payment';
+    const redirectUrl = 'http://example.org/order/12345';
     try {
-        const payment = yield mollie.payments.create({
-            amount:      10.00,
-            description: "My first API payment",
-            redirectUrl: "https://webshop.com/api/payments/response"
-        });
+        const payment = yield mollie.payments.create(
+            amount,
+            description,
+            redirectUrl
+        );
         res.redirect(payment.getPaymentUrl());
     } catch (e) {
         // Handle error
@@ -79,6 +86,9 @@ Retrieving a payment.
 
 ##### Recurring #####
 ```ES6
+    const amount = 10.00;
+    const description = 'My first API recurring payment';
+    const redirectUrl = 'http://example.org/order/12345';
     try {
         const payment = yield mollie.payments.create(
             amount,
@@ -98,7 +108,7 @@ Retrieving a payment.
 #### Get ####
 
 ```ES6
-    const payment_id = 'some_id';
+    const payment_id = 'payment_id';
     const options = {
         method: 'creditcard'
     };
