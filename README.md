@@ -28,37 +28,41 @@ Set the basics needed
     mollie.api_key = 'test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM';
 ```
 
-All callback functions now return promises,
-which you can either `yield` in a `try / catch` or resolve it`foo.then().catch()`
+All callback functions are now generatos.
+You can call .next() on them or when using something like [co](https://www.npmjs.com/package/co), you can just add `yield` in a `try / catch`, like in the examples below.
 
 Create a new payment.
 ```ES6
-    const amount = 10.00;
-    const description = 'My first API payment';
-    const redirectUrl = 'http://example.org/order/12345';
-    try {
-        const payment = yield mollie.payments.create(
-            amount,
-            description,
-            redirectUrl
-        );
-        res.redirect(payment.getPaymentUrl());
-    } catch (e) {
-        // Handle error
-    }
+    co.wrap(function*() {
+        const amount = 10.00;
+        const description = 'My first API payment';
+        const redirectUrl = 'http://example.org/order/12345';
+        try {
+            const payment = yield mollie.payments.create(
+                amount,
+                description,
+                redirectUrl
+            );
+            res.redirect(payment.getPaymentUrl());
+        } catch (e) {
+            // Handle error
+        }
+    });
 ```
 
 Retrieving a payment.
 ```ES6
-    const payment_id = 'payment_id';
-    try {
-        const payment = yield mollie.payments.get(payment_id);
-        if(payment.isPaid()) {
-            console.log('Payment is fulfilled');
+    co.wrap(function*() {
+        const payment_id = 'payment_id';
+        try {
+            const payment = yield mollie.payments.get(payment_id);
+            if(payment.isPaid()) {
+                console.log('Payment is fulfilled');
+            }
+        } catch (e) {
+            // Handle error
         }
-    } catch (e) {
-        // Handle error
-    }
+    });
 ```
 
 ## Implemented Functions ##
