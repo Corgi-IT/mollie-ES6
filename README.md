@@ -1,6 +1,10 @@
 ![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 # Mollie API client in ES6 #
-Mollie API client written in ES6 by an official Mollie Partner / Reseller.
+Mollie API client written in ES6 by an official Mollie Partner.
+
+[![Build Status](https://travis-ci.org/Geexteam/mollie-ES6.svg?branch=master)](https://travis-ci.org/Geexteam/mollie-ES6)
+[![Dependency Status](https://gemnasium.com/badges/github.com/Geexteam/mollie-ES6.svg)](https://gemnasium.com/github.com/Geexteam/mollie-ES6)
+[![NSP Status](https://nodesecurity.io/orgs/geex-team/projects/d754a489-8e72-4566-81fb-334cba2ae1c1/badge)](https://nodesecurity.io/orgs/geex-team/projects/d754a489-8e72-4566-81fb-334cba2ae1c1)
 
 ## Requirements ##
 To use the this module, the following is required:
