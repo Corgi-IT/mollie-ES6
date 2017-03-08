@@ -7,7 +7,8 @@ To use the this module, the following is required:
 
 + Node.js v6.0.0 or higher
 + You can [Sign up](https://www.mollie.com/en/signup/2269941) here for free.
-+ If you need any help with setting it up, just contact us [@GeeX_dev](https://twitter.com/GeeX_dev) on twitter
++ If you need any help with setting it up, just contact us [@GeeX_dev](https://twitter.com/GeeX_dev) on twitter 
+or mail us at [development@geex.company](mailto:development@geex.company?subject=MollieES6%20Help)
 
 ## Installation ##
 

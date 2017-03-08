@@ -11,7 +11,7 @@ describe('Mollie Test', function () {
     });
 
     after(function () {
-        mollie.api_key = require(`${process.env.TEST_DIR}/test_key`).key;
+        mollie.api_key = process.env.MOLLIE_KEY || require(`${process.env.TEST_DIR}/test_key`).key;
     });
 
     describe('App', function () {
