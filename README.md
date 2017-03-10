@@ -1,4 +1,5 @@
 ![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+
 # Mollie API client in ES6 #
 Mollie API client written in ES6 by an official Mollie Partner.
 
