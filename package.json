@@ -9,6 +9,9 @@
     "eslint-pre-commit": "./scripts/eslint-pre-commit",
     "auto-test": "nodemon --ignore coverage/ -x \"npm test && npm run lint\""
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "pre-commit": [
     "eslint-pre-commit",
     "lint",
