@@ -324,10 +324,11 @@ describe('Payments', function () {
 
             it('Should return certain fields', co.wrap(function *() {
                 try {
-                    const payment = yield mollie.payments.list({count: 15});
+                    const count = 10, offset = 2;
+                    const payment = yield mollie.payments.list({count, offset});
                     payment.should.have.property('totalCount');
-                    payment.should.have.property('offset');
-                    payment.should.have.property('count');
+                    payment.should.have.property('offset', offset);
+                    payment.should.have.property('count', count);
                     payment.should.have.property('data');
                     check = 1;
                 } catch (error) {
