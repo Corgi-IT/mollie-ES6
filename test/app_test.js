@@ -1,45 +1,71 @@
 "use strict";
 require('should');
-const co = require('co');
-const mollie = require('../app');
-const request = require('../lib/request');
+const {wrap} = require('co');
+const Mollie = require('../app');
 
-describe('Mollie Test', function () {
+describe('Mollie Test', () => {
 
-    before(function () {
+    let mollieOne;
+    let mollieTwo;
+
+    let keys;
+
+    before(() => {
         process.env.TEST_DIR = __dirname;
+        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
     });
 
-    after(function () {
-        mollie.api_key = process.env.MOLLIE_KEY || require(`${process.env.TEST_DIR}/test_key`).key;
+    beforeEach(() => {
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
     });
 
-    describe('App', function () {
-        it('Should be an Object', function () {
-            mollie.should.be.an.Object();
+    describe('App', () => {
+        it('Should be an Object', () => {
+            mollieOne.should.be.an.Object();
         });
 
-        it('Should have property api_key, which is not set', function () {
-            mollie.should.have.property('api_key', null);
+        it('Should have property payments', () => {
+            mollieOne.should.have.property('payments');
+            mollieOne.payments.should.be.an.Object();
         });
 
-        it('Should have property payments', function () {
-            mollie.should.have.property('payments');
-            mollie.payments.should.be.an.Object();
-        });
-
-        it('Should throw an error if no API key is set', co.wrap(function *() {
+        it('Should throw an error if no API key is set', wrap(function* () {
             let check = 0;
+            const mollie = new Mollie();
 
             try {
-                yield request();
+                yield mollie.request();
                 check = 1;
             } catch (error) {
-                error.should.have.property('error', 'There is no API key I can use, please set your key `mollie.api_key`');
+                error.should.have.property('error', 'There is no API key I can use, please set your key `this.key`');
                 check = 2;
             }
 
             check.should.equal(2);
         }));
+
+        describe('.test', () => {
+
+            it('Should have a function test', () => {
+                mollieOne.test.should.be.a.Function();
+            });
+
+            it('Should return true if the key is valid', wrap(function *() {
+                const result = yield mollieOne.test();
+
+                result.should.equal(true);
+            }));
+
+            it('Should return false if the key is invalid', wrap(function *() {
+                const fakeKey = new Mollie('test_fake_key');
+
+                const result = yield fakeKey.test();
+
+                result.should.equal(false);
+            }));
+
+        })
     });
 });

@@ -1,37 +1,46 @@
 "use strict";
-require('should');
-const co = require('co');
-const mollie = require('../../app');
+const {wrap} = require('co');
+const Mollie = require('../../app');
 
-describe('Customers', function () {
-    const customers = mollie.customers;
+describe('Customers', () => {
+    let mollieOne;
+    let mollieTwo;
+    let keys;
+
     let check = 0;
     let customer_id = null;
 
     const name = 'GeeX';
     const email = 'development@geex.company';
     const metadata = {
-        company_name: 'CreasolDevelopment',
+        company_name: 'GeeX',
         test: true
     };
     const locale = 'nl';
 
-    beforeEach(function () {
-        check = 0;
+    before(() => {
+        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
     });
 
-    describe('.create', function () {
+    beforeEach(() => {
+        check = 0;
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                customers.create.should.be.a.Function();
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
+    });
+
+    describe('.create', () => {
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.customers.create.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function* () {
                 try {
-                    yield customers.create();
+                    yield mollieOne.customers.create();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -41,9 +50,9 @@ describe('Customers', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no name is given', co.wrap(function*() {
+            it('Should throw an error if no name is given', wrap(function* () {
                 try {
-                    yield customers.create(null, email);
+                    yield mollieOne.customers.create(null, email);
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Not all required parameters are given');
@@ -52,9 +61,9 @@ describe('Customers', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no email is given', co.wrap(function*() {
+            it('Should throw an error if no email is given', wrap(function* () {
                 try {
-                    yield customers.create(name, null);
+                    yield mollieOne.customers.create(name, null);
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Not all required parameters are given');
@@ -63,9 +72,9 @@ describe('Customers', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if a non-accepted locale is set', co.wrap(function *() {
+            it('Should throw an error if a non-accepted locale is set', wrap(function* () {
                 try {
-                    yield customers.create(name, email, {locale: 'dutch'});
+                    yield mollieOne.customers.create(name, email, {locale: 'dutch'});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error');
@@ -75,10 +84,10 @@ describe('Customers', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const customer = yield customers.create(name, email);
+                    const customer = yield mollieOne.customers.create(name, email);
                     customer.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -88,10 +97,10 @@ describe('Customers', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have basic properties', co.wrap(function *() {
+            it('Should have basic properties', wrap(function* () {
                 try {
-                    const customer = yield customers.create(name, email, {
-                        locale: 'nl',
+                    const customer = yield mollieOne.customers.create(name, email, {
+                        locale,
                         metadata: 'Is a customer made with unitTests'
                     });
 
@@ -112,18 +121,18 @@ describe('Customers', function () {
         });
     });
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                customers.get.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.customers.get.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function* () {
                 try {
-                    yield customers.get();
+                    yield mollieOne.customers.get();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -133,9 +142,9 @@ describe('Customers', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no id is given', co.wrap(function*() {
+            it('Should throw an error if no id is given', wrap(function* () {
                 try {
-                    yield customers.get();
+                    yield mollieOne.customers.get();
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'No id is given');
@@ -145,10 +154,10 @@ describe('Customers', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const customer = yield customers.get(customer_id);
+                    const customer = yield mollieOne.customers.get(customer_id);
                     customer.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -158,9 +167,9 @@ describe('Customers', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have basic properties', co.wrap(function *() {
+            it('Should have basic properties', wrap(function* () {
                 try {
-                    const customer = yield customers.get(customer_id);
+                    const customer = yield mollieOne.customers.get(customer_id);
 
                     customer.should.have.property('id');
                     customer.should.have.property('name', name);
@@ -178,20 +187,20 @@ describe('Customers', function () {
         });
     });
 
-    describe('.list', function () {
+    describe('.list', () => {
         const offset = 2;
         const count = 'Mollie ES6 module Test';
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                customers.list.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.customers.list.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('Should throw an error if a count of more than 250 is given', co.wrap(function*() {
+        describe('Errors', () => {
+            it('Should throw an error if a count of more than 250 is given', wrap(function* () {
                 try {
-                    yield customers.list({count: 251});
+                    yield mollieOne.customers.list({count: 251});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Count larger than 250 is not allowed');
@@ -201,10 +210,10 @@ describe('Customers', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const customers_list = yield customers.list({count: 15});
+                    const customers_list = yield mollieOne.customers.list({count: 15});
                     customers_list.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -214,9 +223,9 @@ describe('Customers', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return certain fields', co.wrap(function *() {
+            it('Should return certain fields', wrap(function* () {
                 try {
-                    const customers_list = yield customers.list({count: 15});
+                    const customers_list = yield mollieOne.customers.list({count: 15});
                     customers_list.should.have.property('totalCount');
                     customers_list.should.have.property('offset');
                     customers_list.should.have.property('count');
@@ -229,9 +238,9 @@ describe('Customers', function () {
                 check.should.equal(1);
             }));
 
-            it('Should work without parameters', co.wrap(function *() {
+            it('Should work without parameters', wrap(function* () {
                 try {
-                    const customers_list = yield customers.list();
+                    const customers_list = yield mollieOne.customers.list();
 
                     customers_list.should.have.property('totalCount');
                     customers_list.should.have.property('offset');

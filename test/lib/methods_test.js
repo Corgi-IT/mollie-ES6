@@ -1,30 +1,40 @@
 "use strict";
-require('should');
-const co = require('co');
-const mollie = require('../../app');
+const {wrap} = require('co');
+const Mollie = require('../../app');
 
-describe('Methods', function () {
-    const methods = mollie.methods;
+describe('Methods', () => {
     let check = 0;
     let method_id = null;
 
-    beforeEach(function () {
-        check = 0;
+    let mollieOne;
+    let mollieTwo;
+    let keys;
+
+    before(() => {
+        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
     });
 
-    describe('.list', function () {
+    beforeEach(() => {
+        check = 0;
+
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
+    });
+
+    describe('.list', () => {
         const offset = 0;
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                methods.list.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.methods.list.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('Should throw an error if a count of more than 250 is given', co.wrap(function*() {
+        describe('Errors', () => {
+            it('Should throw an error if a count of more than 250 is given', wrap(function* () {
                 try {
-                    yield methods.list({count: 251});
+                    yield mollieOne.methods.list({count: 251});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Count larger than 250 is not allowed');
@@ -34,10 +44,10 @@ describe('Methods', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.list({count: 15});
+                    const method = yield mollieOne.methods.list({count: 15});
                     method.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -47,9 +57,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return certain fields', co.wrap(function *() {
+            it('Should return certain fields', wrap(function* () {
                 try {
-                    const methods = yield mollie.methods.list({count: 15});
+                    const methods = yield mollieOne.methods.list({count: 15});
                     methods.should.have.property('totalCount');
                     methods.should.have.property('offset');
                     methods.should.have.property('count');
@@ -64,9 +74,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return methods with method functions', co.wrap(function *() {
+            it('Should return methods with method functions', wrap(function* () {
                 try {
-                    const methods = yield mollie.methods.list({count: 15});
+                    const methods = yield mollieOne.methods.list({count: 15});
                     const method = methods.data[0];
 
                     method.should.have.property('getMinAmount');
@@ -84,18 +94,18 @@ describe('Methods', function () {
         });
     });
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                methods.get.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.methods.get.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function* () {
                 try {
-                    yield methods.get();
+                    yield mollieOne.methods.get();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -105,9 +115,9 @@ describe('Methods', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no id is given', co.wrap(function*() {
+            it('Should throw an error if no id is given', wrap(function* () {
                 try {
-                    yield methods.get();
+                    yield mollieOne.methods.get();
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'No id is given');
@@ -117,10 +127,10 @@ describe('Methods', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
                     method.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -130,9 +140,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have basic properties', co.wrap(function *() {
+            it('Should have basic properties', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
 
                     method.should.have.property('id');
                     method.should.have.property('description');
@@ -146,9 +156,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getMinAmount which returns the minimal amount', co.wrap(function *() {
+            it('Should have function getMinAmount which returns the minimal amount', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
 
                     method.should.have.property('getMinAmount');
                     const amount = method.getMinAmount();
@@ -162,9 +172,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getMaxAmount which returns the maximal amount', co.wrap(function *() {
+            it('Should have function getMaxAmount which returns the maximal amount', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
 
                     method.should.have.property('getMaxAmount');
                     const amount = method.getMaxAmount();
@@ -178,9 +188,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getImage which returns the image', co.wrap(function *() {
+            it('Should have function getImage which returns the image', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
 
                     method.should.have.property('getImage');
                     const image = method.getImage();
@@ -195,9 +205,9 @@ describe('Methods', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getBiggerImage which returns the bigger image', co.wrap(function *() {
+            it('Should have function getBiggerImage which returns the bigger image', wrap(function* () {
                 try {
-                    const method = yield mollie.methods.get(method_id);
+                    const method = yield mollieOne.methods.get(method_id);
 
                     method.should.have.property('getBiggerImage');
                     const image = method.getBiggerImage();

@@ -1,17 +1,25 @@
 "use strict";
-require('should');
-const co = require('co');
-const mollie = require('../../app');
+const {wrap} = require('co');
+const Mollie = require('../../app');
 
 
-describe('Refunds', function () {
+describe('Refunds', () => {
     let check = 0;
     let refunds_id = null;
 
-    before(co.wrap(function *() {
-        const payments = mollie.payments;
+    let mollieOne;
+    let mollieTwo;
+    let keys;
+
+    before(wrap(function *() {
+        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
+
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
+
         try {
-            const payments_list = yield payments.list();
+            const payments_list = yield mollieOne.payments.list();
             refunds_id = payments_list.data[0].id;
         } catch (e) {
             console.log('Error getting paymentslist before Refunds tests');
@@ -20,23 +28,27 @@ describe('Refunds', function () {
         }
     }));
 
-    beforeEach(function () {
+    beforeEach(() => {
         check = 0;
-    });
 
-    describe('.create', function () {
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
+
+    });
+    describe('.create', () => {
         const amount = 2.00;
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                mollie.refunds.create.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.refunds.create.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function *() {
                 try {
-                    yield mollie.refunds.create();
+                    yield mollieOne.refunds.create();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -46,9 +58,9 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if id amount is given', co.wrap(function*() {
+            it('Should throw an error if id amount is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.create();
+                    yield mollieOne.refunds.create();
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Not all required parameters are given');
@@ -57,9 +69,9 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no valid id is given', co.wrap(function*() {
+            it('Should throw an error if no valid id is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.create('invalid_id');
+                    yield mollieOne.refunds.create('invalidId');
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error');
@@ -70,29 +82,29 @@ describe('Refunds', function () {
 
         });
 
-        describe('Success', function () {
+        describe('Success', () => {
             /**
              * We've had contact with Mollie and they informed us that
              * it's not possible to write unit tests for this functionality.
              * With the current structure, I can't quite see how to write unit tests for this functionality,
              * apart from overwriting the object returned by mollie.refunds.create.
-             * If someone has a better idea about this, without adjusting the code, please submit a pull request :)
+             * If someone has a better idea about this, please submit a pull request :)
              */
         });
     });
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                mollie.refunds.get.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.refunds.get.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function *() {
                 try {
-                    yield mollie.refunds.get();
+                    yield mollieOne.refunds.get();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -102,31 +114,31 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no payment_id is given', co.wrap(function*() {
+            it('Should throw an error if no paymentId is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.get(null, 'some_id');
+                    yield mollieOne.refunds.get(null, 'someId');
                     check = 1;
                 } catch (error) {
-                    error.should.have.property('error', 'No payment_id or refund_id is given');
+                    error.should.have.property('error', 'No paymentId or refundId is given');
                     check = 2;
                 }
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no refund_id is given', co.wrap(function*() {
+            it('Should throw an error if no refundId is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.get('some_id', null);
+                    yield mollieOne.refunds.get('someId', null);
                     check = 1;
                 } catch (error) {
-                    error.should.have.property('error', 'No payment_id or refund_id is given');
+                    error.should.have.property('error', 'No paymentId or refundId is given');
                     check = 2;
                 }
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no valid ids are given', co.wrap(function*() {
+            it('Should throw an error if no valid ids are given', wrap(function*() {
                 try {
-                    yield mollie.refunds.get('invalid_id', 'invalid_id');
+                    yield mollieOne.refunds.get('invalidId', 'invalidId');
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error');
@@ -136,29 +148,29 @@ describe('Refunds', function () {
             }));
         });
 
-        describe('Success', function () {
+        describe('Success', () => {
             /**
              * Since it's not possible to create a refund,
              * it's also not possible to test the success outcomes
              * of the get functionality
-             * If someone has a better idea about this, without adjusting the code, please submit a pull request :)
+             * If someone has a better idea about this, please submit a pull request :)
              */
         });
     });
 
-    describe('.list', function () {
+    describe('.list', () => {
         const count = 'Mollie ES6 module Test';
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                mollie.refunds.list.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.refunds.list.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('SShould throw an error if no id is given', co.wrap(function*() {
+        describe('Errors', () => {
+            it('Should throw an error if no id is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.list(null, {count: 251});
+                    yield mollieOne.refunds.list(null, {count: 251});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'No id is given');
@@ -167,9 +179,9 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if a count of more than 250 is given', co.wrap(function*() {
+            it('Should throw an error if a count of more than 250 is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.list('some_id', {count: 251});
+                    yield mollieOne.refunds.list('someId', {count: 251});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Count larger than 250 is not allowed');
@@ -178,9 +190,9 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no valid id is given', co.wrap(function*() {
+            it('Should throw an error if no valid id is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.list('invalid_id');
+                    yield mollieOne.refunds.list('invalidId');
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error');
@@ -190,28 +202,28 @@ describe('Refunds', function () {
             }));
         });
 
-        describe('Success', function () {
+        describe('Success', () => {
             /**
              * Since it's not possible to create a refund,
              * it's also not possible to test the success outcomes
              * of the get functionality
-             * If someone has a better idea about this, without adjusting the code, please submit a pull request :)
+             * If someone has a better idea about this, please submit a pull request :)
              */
         });
     });
 
-    describe('.cancel', function () {
+    describe('.cancel', () => {
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                mollie.refunds.cancel.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.refunds.cancel.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function *() {
                 try {
-                    yield mollie.refunds.cancel();
+                    yield mollieOne.refunds.cancel();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -221,31 +233,31 @@ describe('Refunds', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no payment_id is given', co.wrap(function*() {
+            it('Should throw an error if no paymentId is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.cancel(null, 'some_id');
+                    yield mollieOne.refunds.cancel(null, 'someId');
                     check = 1;
                 } catch (error) {
-                    error.should.have.property('error', 'No payment_id or refund_id is given');
+                    error.should.have.property('error', 'No paymentId or refundId is given');
                     check = 2;
                 }
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no refund_id is given', co.wrap(function*() {
+            it('Should throw an error if no refundId is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.cancel('some_id', null);
+                    yield mollieOne.refunds.cancel('someId', null);
                     check = 1;
                 } catch (error) {
-                    error.should.have.property('error', 'No payment_id or refund_id is given');
+                    error.should.have.property('error', 'No paymentId or refundId is given');
                     check = 2;
                 }
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no valid id is given', co.wrap(function*() {
+            it('Should throw an error if no valid id is given', wrap(function*() {
                 try {
-                    yield mollie.refunds.cancel('invalid_id', 'invalid_id');
+                    yield mollieOne.refunds.cancel('invalidId', 'invalidId');
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error');
@@ -255,12 +267,12 @@ describe('Refunds', function () {
             }));
         });
 
-        describe('Success', function () {
+        describe('Success', () => {
             /**
              * Since it's not possible to create a refund,
              * it's also not possible to test the success outcomes
              * of the get functionality
-             * If someone has a better idea about this, without adjusting the code, please submit a pull request :)
+             * If someone has a better idea about this, please submit a pull request :)
              */
         });
     });

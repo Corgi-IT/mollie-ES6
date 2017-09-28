@@ -1,32 +1,42 @@
 "use strict";
-require('should');
-const co = require('co');
-const mollie = require('../../app');
+const {wrap} = require('co');
+const Mollie = require('../../app');
 
-describe('Payments', function () {
-    const payments = mollie.payments;
+describe('Payments', () => {
     let check = 0;
     let payment_id = null;
 
-    beforeEach(function () {
-        check = 0;
+    let mollieOne;
+    let mollieTwo;
+    let keys;
+
+    before(() => {
+        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
     });
 
-    describe('.create', function () {
+    beforeEach(() => {
+        check = 0;
+
+        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
+        if (keys.length > 0)
+            mollieTwo = new Mollie(keys[1].key)
+    });
+
+    describe('.create', () => {
         const amount = 10.00;
         const description = 'Mollie ES6 module Test';
         const redirectUrl = 'http://example.org/order/12345';
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                payments.create.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.payments.create.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function* () {
                 try {
-                    yield payments.create();
+                    yield mollieOne.payments.create();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -36,9 +46,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no amount is given', co.wrap(function*() {
+            it('Should throw an error if no amount is given', wrap(function* () {
                 try {
-                    yield payments.create(null, description, redirectUrl);
+                    yield mollieOne.payments.create(null, description, redirectUrl);
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Not all required parameters are given');
@@ -47,9 +57,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no description is given', co.wrap(function*() {
+            it('Should throw an error if no description is given', wrap(function* () {
                 try {
-                    yield payments.create(amount, null, redirectUrl);
+                    yield mollieOne.payments.create(amount, null, redirectUrl);
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Not all required parameters are given');
@@ -58,9 +68,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no redirectUrl is given', co.wrap(function*() {
+            it('Should throw an error if no redirectUrl is given', wrap(function* () {
                 try {
-                    yield payments.create(amount, description);
+                    yield mollieOne.payments.create(amount, description);
                     local.should.equal(false);
                     check = 1;
                 } catch (error) {
@@ -70,9 +80,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if recurringType is set, but no customerID', co.wrap(function *() {
+            it('Should throw an error if recurringType is set, but no customerID', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(
+                    const payment = yield mollieOne.payments.create(
                         amount,
                         description,
                         redirectUrl,
@@ -87,9 +97,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if recurringType is not "first" or "recurring"', co.wrap(function *() {
+            it('Should throw an error if recurringType is not "first" or "recurring"', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(
+                    const payment = yield mollieOne.payments.create(
                         amount,
                         description,
                         redirectUrl,
@@ -108,10 +118,10 @@ describe('Payments', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(amount, description, redirectUrl);
+                    const payment = yield mollieOne.payments.create(amount, description, redirectUrl);
                     payment.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -121,9 +131,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have basic properties', co.wrap(function *() {
+            it('Should have basic properties', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(amount, description, redirectUrl);
+                    const payment = yield mollieOne.payments.create(amount, description, redirectUrl);
 
                     payment.should.have.property('id');
                     payment.should.have.property('status');
@@ -137,9 +147,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getPaymentUrl which returns the paymentUrl', co.wrap(function *() {
+            it('Should have function getPaymentUrl which returns the paymentUrl', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(amount, description, redirectUrl);
+                    const payment = yield mollieOne.payments.create(amount, description, redirectUrl);
                     payment.should.have.property('getPaymentUrl');
                     const url = payment.getPaymentUrl();
                     url.should.be.an.String();
@@ -153,9 +163,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function isPaid which returns false', co.wrap(function *() {
+            it('Should have function isPaid which returns false', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.create(amount, description, redirectUrl);
+                    const payment = yield mollieOne.payments.create(amount, description, redirectUrl);
                     payment.should.have.property('isPaid');
                     const paid = payment.isPaid();
                     paid.should.be.a.Boolean();
@@ -172,18 +182,18 @@ describe('Payments', function () {
         });
     });
 
-    describe('.get', function () {
+    describe('.get', () => {
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                payments.get.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.payments.get.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('An Object should be thrown', co.wrap(function *() {
+        describe('Errors', () => {
+            it('An Object should be thrown', wrap(function* () {
                 try {
-                    yield payments.get();
+                    yield mollieOne.payments.get();
                     check = 1;
                 } catch (error) {
                     error.should.be.an.Object();
@@ -193,9 +203,9 @@ describe('Payments', function () {
                 check.should.equal(2);
             }));
 
-            it('Should throw an error if no id is given', co.wrap(function*() {
+            it('Should throw an error if no id is given', wrap(function* () {
                 try {
-                    yield payments.get();
+                    yield mollieOne.payments.get();
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'No id is given');
@@ -205,10 +215,10 @@ describe('Payments', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.get(payment_id);
+                    const payment = yield mollieOne.payments.get(payment_id);
                     payment.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -218,9 +228,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have basic properties', co.wrap(function *() {
+            it('Should have basic properties', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.get(payment_id);
+                    const payment = yield mollieOne.payments.get(payment_id);
 
                     payment.should.have.property('id');
                     payment.should.have.property('status');
@@ -234,9 +244,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function getPaymentUrl which returns the paymentUrl', co.wrap(function *() {
+            it('Should have function getPaymentUrl which returns the paymentUrl', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.get(payment_id);
+                    const payment = yield mollieOne.payments.get(payment_id);
 
                     payment.should.have.property('getPaymentUrl');
                     const url = payment.getPaymentUrl();
@@ -251,9 +261,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should have function isPaid, with various outcomes based on the status', co.wrap(function *() {
+            it('Should have function isPaid, with various outcomes based on the status', wrap(function* () {
                 try {
-                    let payment = yield mollie.payments.get(payment_id);
+                    let payment = yield mollieOne.payments.get(payment_id);
                     payment.should.have.property('isPaid');
                     let paid = payment.isPaid();
                     paid.should.be.a.Boolean();
@@ -286,20 +296,20 @@ describe('Payments', function () {
     });
 
 
-    describe('.list', function () {
+    describe('.list', () => {
         const offset = 2;
         const count = 'Mollie ES6 module Test';
 
-        describe('Basics', function () {
-            it('Should be a function', function () {
-                payments.list.should.be.a.Function();
+        describe('Basics', () => {
+            it('Should be a function', () => {
+                mollieOne.payments.list.should.be.a.Function();
             });
         });
 
-        describe('Errors', function () {
-            it('Should throw an error if a count of more than 250 is given', co.wrap(function*() {
+        describe('Errors', () => {
+            it('Should throw an error if a count of more than 250 is given', wrap(function* () {
                 try {
-                    yield payments.list({count: 251});
+                    yield mollieOne.payments.list({count: 251});
                     check = 1;
                 } catch (error) {
                     error.should.have.property('error', 'Count larger than 250 is not allowed');
@@ -309,10 +319,10 @@ describe('Payments', function () {
             }));
         });
 
-        describe('Success', function () {
-            it('Should return an Object', co.wrap(function *() {
+        describe('Success', () => {
+            it('Should return an Object', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.list({count: 15});
+                    const payment = yield mollieOne.payments.list({count: 15});
                     payment.should.be.an.Object();
                     check = 1;
                 } catch (error) {
@@ -322,10 +332,10 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return certain fields', co.wrap(function *() {
+            it('Should return certain fields', wrap(function* () {
                 try {
                     const count = 10, offset = 2;
-                    const payment = yield mollie.payments.list({count, offset});
+                    const payment = yield mollieOne.payments.list({count, offset});
                     payment.should.have.property('totalCount');
                     payment.should.have.property('offset', offset);
                     payment.should.have.property('count', count);
@@ -338,9 +348,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should return payments with payment functions', co.wrap(function *() {
+            it('Should return payments with payment functions', wrap(function* () {
                 try {
-                    const payments = yield mollie.payments.list({count: 15});
+                    const payments = yield mollieOne.payments.list({count: 15});
                     const payment = payments.data[0];
 
                     payment.should.have.property('getPaymentUrl');
@@ -354,9 +364,9 @@ describe('Payments', function () {
                 check.should.equal(1);
             }));
 
-            it('Should work without parameters', co.wrap(function *() {
+            it('Should work without parameters', wrap(function* () {
                 try {
-                    const payment = yield mollie.payments.list();
+                    const payment = yield mollieOne.payments.list();
 
                     payment.should.have.property('totalCount');
                     payment.should.have.property('offset');
