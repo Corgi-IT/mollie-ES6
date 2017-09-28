@@ -6,12 +6,12 @@ const Mollie = require('../app');
 describe('Mollie Test', () => {
 
     let mollieOne;
-    let mollieTwo;
 
     let keys;
 
     before(() => {
         process.env.TEST_DIR = __dirname;
+
         if (process.env.MOLLIE_KEY)
             keys = [{key: process.env.MOLLIE_KEY}];
         else
@@ -19,9 +19,7 @@ describe('Mollie Test', () => {
     });
 
     beforeEach(() => {
-        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
-        if (keys.length > 0)
-            mollieTwo = new Mollie(keys[1].key)
+        mollieOne = new Mollie(keys[0].key);
     });
 
     describe('App', () => {

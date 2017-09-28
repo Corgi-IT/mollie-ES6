@@ -8,15 +8,15 @@ describe('Refunds', () => {
     let refunds_id = null;
 
     let mollieOne;
-    let mollieTwo;
     let keys;
 
     before(wrap(function *() {
-        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
+        if (process.env.MOLLIE_KEY)
+            keys = [{key: process.env.MOLLIE_KEY}];
+        else
+            keys = require(`${process.env.TEST_DIR}/test_keys`);
 
-        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
-        if (keys.length > 0)
-            mollieTwo = new Mollie(keys[1].key)
+        mollieOne = new Mollie(keys[0].key);
 
         try {
             const payments_list = yield mollieOne.payments.list();
@@ -31,11 +31,9 @@ describe('Refunds', () => {
     beforeEach(() => {
         check = 0;
 
-        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
-        if (keys.length > 0)
-            mollieTwo = new Mollie(keys[1].key)
-
+        mollieOne = new Mollie(keys[0].key);
     });
+
     describe('.create', () => {
         const amount = 2.00;
 

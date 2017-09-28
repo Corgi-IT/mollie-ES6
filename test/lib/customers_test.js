@@ -4,7 +4,6 @@ const Mollie = require('../../app');
 
 describe('Customers', () => {
     let mollieOne;
-    let mollieTwo;
     let keys;
 
     let check = 0;
@@ -19,15 +18,15 @@ describe('Customers', () => {
     const locale = 'nl';
 
     before(() => {
-        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
+        if (process.env.MOLLIE_KEY)
+            keys = [{key: process.env.MOLLIE_KEY}];
+        else
+            keys = require(`${process.env.TEST_DIR}/test_keys`);
     });
 
     beforeEach(() => {
         check = 0;
-
-        mollieOne = new Mollie(process.env.MOLLIE_KEY || keys[0].key);
-        if (keys.length > 0)
-            mollieTwo = new Mollie(keys[1].key)
+        mollieOne = new Mollie(keys[0].key);
     });
 
     describe('.create', () => {
