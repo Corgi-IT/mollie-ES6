@@ -1,6 +1,6 @@
 {
   "name": "mollie-es6",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "Mollie module in ES6",
   "main": "app.js",
   "scripts": {
