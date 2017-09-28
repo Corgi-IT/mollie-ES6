@@ -1,4 +1,4 @@
-![Mollie](http://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
+![Mollie](https://www.mollie.nl/files/Mollie-Logo-Style-Small.png)
 
 # Mollie API client in ES6 #
 Mollie API client written in ES6 by an official Mollie Partner.
@@ -26,12 +26,12 @@ You can install this module with NPM:
 
 Require the library.
 ```ES6
-    const mollie = require('mollie-es6');
+    const Mollie = require('mollie-es6');
 ```
 
-Set the basics needed
+Initialize
 ```ES6
-    mollie.api_key = 'test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM';
+    const mollieApp = new Mollie('test_dHar4XY7LxsDOtmnkVtjNVWXLSlXsM');
 ```
 
 All callback functions are now generatos.
@@ -42,9 +42,9 @@ Create a new payment.
     co.wrap(function*() {
         const amount = 10.00;
         const description = 'My first API payment';
-        const redirectUrl = 'http://example.org/order/12345';
+        const redirectUrl = 'https://example.org/order/12345';
         try {
-            const payment = yield mollie.payments.create(
+            const payment = yield mollieApp.payments.create(
                 amount,
                 description,
                 redirectUrl
@@ -59,9 +59,9 @@ Create a new payment.
 Retrieving a payment.
 ```ES6
     co.wrap(function*() {
-        const payment_id = 'payment_id';
+        const paymentId = 'paymentId';
         try {
-            const payment = yield mollie.payments.get(payment_id);
+            const payment = yield mollieApp.payments.get(paymentId);
             if(payment.isPaid()) {
                 console.log('Payment is fulfilled');
             }
@@ -81,9 +81,9 @@ Retrieving a payment.
 ```ES6
     const amount = 10.00;
     const description = 'My first API payment';
-    const redirectUrl = 'http://example.org/order/12345';
+    const redirectUrl = 'https://example.org/order/12345';
     try {
-        const payment = yield mollie.payments.create(
+        const payment = yield mollieApp.payments.create(
             amount,
             description,
             redirectUrl
@@ -98,9 +98,9 @@ Retrieving a payment.
 ```ES6
     const amount = 10.00;
     const description = 'My first API recurring payment';
-    const redirectUrl = 'http://example.org/order/12345';
+    const redirectUrl = 'https://example.org/order/12345';
     try {
-        const payment = yield mollie.payments.create(
+        const payment = yield mollieApp.payments.create(
             amount,
             description,
             redirectUrl,
@@ -118,12 +118,12 @@ Retrieving a payment.
 #### Get ####
 
 ```ES6
-    const payment_id = 'payment_id';
+    const paymentId = 'paymentId';
     const options = {
         method: 'creditcard'
     };
     try {
-        const payment = yield mollie.payments.get(payment_id, options);
+        const payment = yield mollieApp.payments.get(paymentId, options);
         if(payment.isPaid()) {
             console.log('Payment is paid');
         }
@@ -140,7 +140,7 @@ Retrieving a payment.
         offset: 200
     }
     try {
-        const payments_list = yield mollie.payments.list(options);
+        const payments_list = yield mollieApp.payments.list(options);
         /*
         payments_list = {
             totalCount: Number,
@@ -170,7 +170,7 @@ Retrieving a payment.
         offset: 5
     }
     try {
-        const methods_list = yield mollie.methods.list(options);
+        const methods_list = yield mollieApp.methods.list(options);
         /*
         methods_list = {
             totalCount: Number,
@@ -194,10 +194,10 @@ Retrieving a payment.
 
 ```ES6
     const amount = 100.00;
-    const method_id = 'creditcard';
+    const methodId = 'creditcard';
 
     try {
-        const method = yield mollie.methods.get(method_id);
+        const method = yield mollieApp.methods.get(methodId);
         if(method.getMinAmount() < amount && method.getMaxAmount > amount) {
             // Allow user to check out
         }
@@ -218,7 +218,7 @@ Using issuers makes it possible to integrate the bank choice in your own system.
         offset: 2
     }
     try {
-        const issuers_list = yield mollie.issuers.list(options);
+        const issuers_list = yield mollieApp.issuers.list(options);
         /*
         issuers_list = {
             totalCount: Number,
@@ -241,10 +241,10 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 #### Get ####
 
 ```ES6
-    const issuer_id = 'ideal_ABNANL2A';
+    const issuerId = 'ideal_ABNANL2A';
 
     try {
-        const issuer = yield mollie.issuers.get(issuer_id);
+        const issuer = yield mollieApp.issuers.get(issuerId);
         // Do something with this issuer
     } catch (e) {
         // Handle error
@@ -257,10 +257,10 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 
 ```ES6
     try {
-        const refund_id = 'some_id';
+        const refundId = 'someId';
         const amount = 5.00; // This is optional, if omitted,
                              // the full amount will be refunded
-        const refund = yield mollie.refunds.create(refund_id, amount);
+        const refund = yield mollieApp.refunds.create(refundId, amount);
     } catch (e) {
         // Handle error
     }
@@ -269,10 +269,10 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 #### Get ####
 
 ```ES6
-    const payment_id = 'payment_id';
-    const refund_id = 'refund_id'
+    const paymentId = 'paymentId';
+    const refundId = 'refundId'
     try {
-        const refund = yield mollie.refunds.get(payment_id, refund_id);
+        const refund = yield mollieApp.refunds.get(paymentId, refundId);
         if(refund.payment.isFullyRefunded()) {
             console.log('Payment is fully refunded');
         }
@@ -284,13 +284,13 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 #### List ####
 
 ```ES6
-    const payment_id = 'payment_id';
+    const paymentId = 'paymentId';
     const options = {
         count: 10,
         offset: 2
     }
     try {
-        const payments_list = yield mollie.refunds.list(payment_id, options);
+        const payments_list = yield mollieApp.refunds.list(paymentId, options);
     } catch (e) {
         // Handle error
     }
@@ -299,10 +299,10 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 #### Cancel ####
 
 ```ES6
-    const payment_id = 'payment_id';
-    const refund_id = 'refund_id'
+    const paymentId = 'paymentId';
+    const refundId = 'refundId'
     try {
-        const refund = yield mollie.refunds.cancel(payment_id, refund_id);
+        const refund = yield mollieApp.refunds.cancel(paymentId, refundId);
     } catch (e) {
         // Handle error
     }
@@ -315,7 +315,7 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 ##### Normal #####
 ```ES6
     try {
-        const customer = yield mollie.customers.create(
+        const customer = yield mollieApp.customers.create(
             'Customer name',
             'info@domain.tld',
             {locale: 'en', metadata: {something: 'here'}}
@@ -329,9 +329,9 @@ Using issuers makes it possible to integrate the bank choice in your own system.
 #### Get ####
 
 ```ES6
-    const customer_id = 'some_id';
+    const customerId = 'someId';
     try {
-        const customer = yield mollie.customers.get(customer_id);
+        const customer = yield mollieApp.customers.get(customerId);
         // Do something with this customer data
     } catch (e) {
         // Handle error
@@ -346,7 +346,7 @@ Using issuers makes it possible to integrate the bank choice in your own system.
         offset: 200
     }
     try {
-        const customer_list = yield mollie.customers.list(options);
+        const customer_list = yield mollieApp.customers.list(options);
         /*
         customer_list = {
             totalCount: Number,
