@@ -12,7 +12,10 @@ describe('Mollie Test', () => {
 
     before(() => {
         process.env.TEST_DIR = __dirname;
-        keys = require(`${process.env.TEST_DIR}/test_keys`) || null;
+        if (process.env.MOLLIE_KEY)
+            keys = [{key: process.env.MOLLIE_KEY}];
+        else
+            keys = require(`${process.env.TEST_DIR}/test_keys`);
     });
 
     beforeEach(() => {
@@ -52,13 +55,13 @@ describe('Mollie Test', () => {
                 mollieOne.test.should.be.a.Function();
             });
 
-            it('Should return true if the key is valid', wrap(function *() {
+            it('Should return true if the key is valid', wrap(function* () {
                 const result = yield mollieOne.test();
 
                 result.should.equal(true);
             }));
 
-            it('Should return false if the key is invalid', wrap(function *() {
+            it('Should return false if the key is invalid', wrap(function* () {
                 const fakeKey = new Mollie('test_fake_key');
 
                 const result = yield fakeKey.test();
