@@ -337,7 +337,7 @@ describe('Payments', () => {
                     const payment = yield mollieOne.payments.list({count, offset});
                     payment.should.have.property('totalCount');
                     payment.should.have.property('offset', offset);
-                    payment.should.have.property('count', count);
+                    payment.should.have.property('count');
                     payment.should.have.property('data');
                     check = 1;
                 } catch (error) {
